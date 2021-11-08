@@ -20,7 +20,7 @@ from flexget.utils.soup import get_soup
 from flexget.config_schema import one_or_more
 from flexget.utils.tools import parse_timedelta
 
-log = logging.getLogger('douban')
+logger = logging.getLogger('douban')
 
 
 class Douban(object):
@@ -109,7 +109,7 @@ class Douban(object):
         for f in concurrent.futures.as_completed(futures):
             exception = f.exception()
             if isinstance(exception, plugin.PluginError):
-                log.error(exception)
+                logger.error(exception)
 
     def consider_accept(self, task, entry):
         link = entry.get('link')
@@ -124,19 +124,19 @@ class Douban(object):
 
         m = re.search(r'(http.*?douban\.com\/subject\/\d+)', detail_page.text)
         if not m:
-            logging.warning("Failed to find douban url for entry: {}".format(entry.get('title')))
+            logger.warning("Failed to find douban url for entry: {}".format(entry.get('title')))
             return
         
         params = {'url': m.group()}
         ptgen = task.requests.get(self.config['ptgen'], params=params)
         if not ptgen.ok or not ptgen.json().get("success"):
-            logging.warning("Failed to get ptgen for entry: {}".format(entry.get('title')))
+            logger.warning("Failed to get ptgen for entry: {}".format(entry.get('title')))
             return
         douban = ptgen.json()
 
         if self.config['score']:
             if not ptgen.json().get('douban_rating_average'):
-                logging.warning("Douban rating not found for entry: {}".format(entry.get('title')))
+                logger.warning("Douban rating not found for entry: {}".format(entry.get('title')))
                 return
             if Decimal(douban.get('douban_rating_average')) < Decimal(self.config['score']):
                 entry.reject('Douban rating is lower than {}'.format(self.config['score']), remember=True)
