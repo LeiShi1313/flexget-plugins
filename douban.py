@@ -207,13 +207,13 @@ class Douban(object):
             if self.config.get(criteria):
                 if criteria.endswith('_one_of'):
                     if not any(
-                        any(c.lower() in str(d).lower() for d in douban.get(criteria[:-7]))
+                        any(c.lower() in str(d).lower() for d in douban.get(criteria[:-7], []))
                         for c in self.config.get(criteria)
                     ):
                         entry.reject("{} not desired".format(criteria), remember=True)
                 else:
                     if not all(
-                        any(c.lower() in str(d).lower() for d in douban.get(criteria))
+                        any(c.lower() in str(d).lower() for d in douban.get(criteria, []))
                         for c in self.config.get(criteria)
                     ):
                         entry.reject("{} not desired".format(criteria), remember=True)
