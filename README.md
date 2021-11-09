@@ -33,15 +33,13 @@ C:\Users\<YOURUSER>\flexget\plugins\  # Windows
 ### 最简配置（筛选豆瓣7分以上资源）
 ```yaml
 douban:
-  ptgen: https://ptgen.xxx.xxx.xxx  # PTGen地址，必填
   cookie: 'a=xxx; b=xxx' # 必填
   score: 7 # 豆瓣评分，选填
 ```
 
-### 多项筛选项配置（筛选豆瓣7分以上诺兰烧脑动作片）
+### 多项筛选项配置 #1（筛选豆瓣7分以上诺兰烧脑动作片）
 ```yaml
 douban:
-  ptgen: https://ptgen.xxx.xxx.xxx  # PTGen地址，必填
   cookie: 'a=xxx; b=xxx' # 选填
   score: 7 # 豆瓣评分，选填
   director:
@@ -52,25 +50,50 @@ douban:
     - 烧脑
 ```
 
+### 多项筛选项配置 #2（筛选王一博或肖战主演的小说改编剧:）
+```yaml
+douban:
+  cookie: 'a=xxx; b=xxx' # 选填
+  cast_one_of:
+    - 肖战
+    - 王一博
+  tags:
+    - 小说改编
+```
+
 ### 完整配置
 ```yaml
 douban:
-  ptgen: https://ptgen.xxx.xxx.xxx  # PTGen地址，必填
   cookie: 'a=xxx; b=xxx' # 选填
+  ptgen: https://ptgen.xxx.xxx.xxx  # PTGen地址，选填，开启后会使用PTGen来获取豆瓣信息
   score: 7 # 豆瓣评分，选填
-  director: # 豆瓣导演信息，选填，建议使用英文
+  director: # 豆瓣导演信息，选填，建议使用英文，匹配所有词缀
     - XXXX
-  cast: # 豆瓣演员信息，选填，建议使用英文
+  director_one_of: # 豆瓣导演信息，选填，匹配任一词缀
     - XXXX
-  writer: # 豆瓣导演信息，选填，建议使用英文
+  cast: # 豆瓣演员信息，选填，建议使用英文，匹配所有词缀
     - XXXX
-  genre: # 豆瓣类型信息，选填
+  cast_one_of: # 豆瓣演员信息，选填，匹配任一词缀
+    - XXXX
+  writer: # 豆瓣导演信息，选填，建议使用英文，匹配所有词缀
+    - XXXX
+  writer_one_of: # 豆瓣导演信息，选填，匹配任一词缀
+    - XXXX
+  genre: # 豆瓣类型信息，选填，匹配所有词缀
     - 动作
-  language: # 豆瓣语言信息，选填
+  genre_one_of: # 豆瓣类型信息，选填，匹配任一词缀
+    - 动作
+  language: # 豆瓣语言信息，选填，匹配所有词缀
     - 英语
-  region: # 豆瓣地区信息，选填
+  language_one_of: # 豆瓣语言信息，选填，匹配任一词缀
+    - 英语
+  region: # 豆瓣地区信息，选填，匹配所有词缀
     - 美国
-  tags: # 豆瓣成员常用的标签，选填
+  region_one_of: # 豆瓣地区信息，选填，匹配任一词缀
+    - 美国
+  tags: # 豆瓣成员常用的标签，选填，匹配所有词缀
+    - 烧脑
+  tags_one_of: # 豆瓣成员常用的标签，选填，匹配任一词缀
     - 烧脑
 ```
 
