@@ -100,16 +100,18 @@ class Douban(object):
             headers['cookie'] = config['cookie']
         task.requests.headers.update(headers)
 
-        futures = []  # 线程任务
-        with concurrent.futures.ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()) as executor:
-            for entry in task.accepted + task.undecided:
-                futures.append(executor.submit(self.consider_accept, self, task, entry))
-                time.sleep(0.5)
+        # futures = []  # 线程任务
+        # with concurrent.futures.ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()) as executor:
+        #     for entry in task.accepted + task.undecided:
+        #         futures.append(executor.submit(self.consider_accept, self, task, entry))
+        #         time.sleep(0.5)
 
-        for f in concurrent.futures.as_completed(futures):
-            exception = f.exception()
-            if isinstance(exception, plugin.PluginError):
-                logger.error(exception)
+        # for f in concurrent.futures.as_completed(futures):
+        #     exception = f.exception()
+        #     if isinstance(exception, plugin.PluginError):
+        #         logger.error(exception)
+        for entry in task.accepted + task.undecided:
+            self.consider_accept(task, entry)
 
     def consider_accept(self, task, entry):
         link = entry.get('link')
