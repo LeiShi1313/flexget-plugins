@@ -168,9 +168,11 @@ class Douban(object):
             raise plugin.PluginError("Can't access the site. Your cookie may be wrong!")
 
         if self.config["ptgen"]:
-            douban = self.get_ptgen(detail_page.text)
+            douban = self.get_ptgen(entry, detail_page.text)
         else:
             douban = self.parse_detail_page(detail_page.text)
+        if not douban:
+            return
 
         if self.config["score"]:
             if not douban.get("douban_rating_average"):
@@ -276,7 +278,7 @@ class Douban(object):
 
         return result
 
-    def get_ptgen(self, page):
+    def get_ptgen(self, entry, page):
         m = re.search(r"(http.*?douban\.com\/subject\/\d+)", page)
         if not m:
             logger.warning(
@@ -290,7 +292,7 @@ class Douban(object):
             logger.warning(
                 "Failed to get ptgen for entry: {}".format(entry.get("title"))
             )
-            return {}
+            return None
         return ptgen.json()
 
 
