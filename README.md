@@ -27,7 +27,7 @@ C:\Users\<YOURUSER>\flexget\plugins\  # Windows
 4. 若启用了Web-UI或守护进程，则重启flexget重新加载配置
 
 ## 使用
-1. 编辑flexget配置文件，添加nexusphp选项，按照需要进行配置
+1. 编辑flexget配置文件，添加douban选项，按照需要进行配置
 
 ### 最简配置（筛选豆瓣7分以上资源）
 ```yaml
