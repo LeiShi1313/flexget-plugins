@@ -8,7 +8,6 @@
 本插件会爬取details.php页面，请将参数限制到合理的范围，减轻对服务器负担<br>
 本插件已尽量减轻服务器负担，因本插件造成账号封禁等损失，请自行承担后果<br>
 **建议** 将RSS条目限制在20条以内，将Flexget运行频率设置在10分钟以上。
-如果不想对人数进行过滤，不建议设置seeders和leechers参数。<br>
 
 ## 安装插件
 1. 下载插件 [douban.py](https://github.com/leishi1313/flexget-plugins/blob/main/douban.py)
