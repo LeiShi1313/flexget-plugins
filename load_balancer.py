@@ -55,7 +55,7 @@ class LoadBalancer(object):
     }
 
     def prepare_config(self, config):
-        config.setdefault("field", "link",)
+        config.setdefault("field", "title",)
         config.setdefault("divisor", 2)
         config.setdefault("accept", [])
         self.config = config
