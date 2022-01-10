@@ -96,5 +96,72 @@ douban:
     - 烧脑
 ```
 
+# 负载均衡插件
+
+
+## 安装插件
+1. 下载插件 [load_balancer.py](https://github.com/leishi1313/flexget-plugins/blob/main/load_balancer.py)
+2. 在Flexget配置文件夹下新建plugins文件夹，例如：
+```
+~/.flexget/plugins/  # Linux
+C:\Users\<YOURUSER>\flexget\plugins\  # Windows
+```
+再次注意`plugins`文件夹和`config.yml`处在同一级目录下，例如：
+```
+/.flxget
+  ┕━config.yml
+  ┕━plugins
+    ┕━load_balancer.py
+```
+3. 将插件拷贝至plugins
+4. 若启用了Web-UI或守护进程，则重启flexget重新加载配置
+
+## 使用
+1. 编辑flexget配置文件，添加loadbalancer选项，按照需要进行配置
+
+### 最简配置
+默认使用RSS标题，MD5之后取模2
+```yaml
+task1:
+  rss:
+    url: XXXXXXXXXXXXX
+ loadbalancer:
+    accept: [0]
+task2:
+  rss:
+    url: XXXXXXXXXXXXX
+  loadbalancer:
+    accept: [1]
+```
+
+### 复杂配置
+3个Task负载均衡，利用种子详细链接做MD5之后取模3
+```yaml
+task1:
+  rss:
+    url: XXXXXXXXXXXXX
+    other_field: [link]
+ loadbalancer:
+    field: link
+    divisor: 3
+    accept: [0]
+task2:
+  rss:
+    url: XXXXXXXXXXXXX
+    other_field: [link]
+  loadbalancer:
+    field: link
+    divisor: 3
+    accept: [1]
+task3:
+  rss:
+    url: XXXXXXXXXXXXX
+    other_field: [link]
+  loadbalancer:
+    field: link
+    divisor: 3
+    accept: [2]
+```
+
 # Thanks
 - [flexget-nexusphp](https://github.com/Juszoe/flexget-nexusphp)
