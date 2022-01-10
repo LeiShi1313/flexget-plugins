@@ -5,20 +5,15 @@ from __future__ import unicode_literals, division, absolute_import
 import re
 import logging
 import hashlib
-from datetime import datetime
-from decimal import Decimal
 
 from builtins import *
 
-from requests.adapters import HTTPAdapter
 
 from flexget import plugin
 from flexget.event import event
-from flexget.utils.soup import get_soup
 from flexget.config_schema import one_or_more
-from flexget.utils.tools import parse_timedelta
 
-logger = logging.getLogger("douban")
+logger = logging.getLogger("load_balancer")
 
 
 class LoadBalancer(object):
@@ -55,7 +50,7 @@ class LoadBalancer(object):
     }
 
     def prepare_config(self, config):
-        config.setdefault("field", "link",)
+        config.setdefault("field", "title",)
         config.setdefault("divisor", 2)
         config.setdefault("accept", [])
         self.config = config

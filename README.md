@@ -2,6 +2,7 @@
 一些flexget插件，目前有：
   - [豆瓣过滤插件](#豆瓣过滤插件)
   - [负载均衡插件](#负载均衡插件)
+  - [auto-remove-torrents插件](#auto-remove-torrents插件)
 
 # 豆瓣过滤插件
 
@@ -164,5 +165,50 @@ task3:
     accept: [2]
 ```
 
+# auto-remove-torrents插件
+
+
+## 安装插件
+1. 下载插件 [auto_remove_torrents.py](https://github.com/leishi1313/flexget-plugins/blob/main/auto_remove_torrents.py)
+2. 在Flexget配置文件夹下新建plugins文件夹，例如：
+```
+~/.flexget/plugins/  # Linux
+C:\Users\<YOURUSER>\flexget\plugins\  # Windows
+```
+再次注意`plugins`文件夹和`config.yml`处在同一级目录下，例如：
+```
+/.flxget
+  ┕━config.yml
+  ┕━plugins
+    ┕━auto_remove_torrents.py
+```
+3. 将插件拷贝至plugins
+4. 安装auto-remove-torrents： `pip install autoremove-torrents`
+5. 若启用了Web-UI或守护进程，则重启flexget重新加载配置
+
+## 使用
+1. 编辑flexget配置文件，添加auto_remove_torrents选项，按照需要进行配置
+
+### 配置
+```yaml
+remove1:
+  auto_remove_torrents:
+    client: qbittorrent
+    host: http://127.0.0.1:8080
+    username: admin
+    password: amdinadmin
+    delete_data: true
+    strategies:
+      remove_when_full:
+        remote_free_space:
+          min: 10
+          path: /downloads
+          action: remove-old-seeds
+      remove_for_good_ratio:
+        ratio: 1
+```
+
+
 # Thanks
 - [flexget-nexusphp](https://github.com/Juszoe/flexget-nexusphp)
+- [autoremove-torrents](https://github.com/jerrymakesjelly/autoremove-torrents)
