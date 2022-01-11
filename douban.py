@@ -78,8 +78,7 @@ class Douban(object):
             "language_one_of": one_or_more({"type": "string"}),
             "region_one_of": one_or_more({"type": "string"}),
             "tags_one_of": one_or_more({"type": "string"}),
-        },
-        "required": ["cookie"],
+        }
     }
 
     score_regex = re.compile(r"豆瓣\s*评分\s+([\d\.]+)\/10[\s\w]+\<br \/>")
@@ -147,33 +146,33 @@ class Douban(object):
         task.requests.mount("http://", adapter)
         task.requests.mount("https://", adapter)
         headers = {"user-agaen": config["user_agent"]}
-        if config["cookie"]:
-            headers["cookie"] = config["cookie"]
         task.requests.headers.update(headers)
 
         for entry in task.accepted + task.undecided:
             self.consider_accept(task, entry)
 
     def consider_accept(self, task, entry):
-        link = entry.get("link")
-        if not link:
-            raise plugin.PluginError(
-                "The rss plugin require 'other_fields' which contain 'link'. "
-                "For example: other_fields: - link"
-            )
-        detail_page = task.requests.get(link, timeout=10)
-        detail_page.encoding = "utf-8"
+        douban = self.parse_detail_page(entry.get("description", ''))
 
-        if "login" in detail_page.url or "portal.php" in detail_page.url:
-            raise plugin.PluginError("Can't access the site. Your cookie may be wrong!")
+        if not douban and self.config["ptgen"]:
+            douban = self.get_ptgen(entry, entry.get("description", ''))
 
-        if self.config["ptgen"]:
-            douban = self.get_ptgen(entry, detail_page.text)
-        else:
+        if not douban and self.config["cookie"] and entry.get("link"):
+            headers = {"cookie": self.config["cookie"]}
+            task.requests.headers.update(headers)
+            detail_page = task.requests.get(entry["link"], timeout=10)
+            detail_page.encoding = "utf-8"
+
             douban = self.parse_detail_page(detail_page.text)
-        if not douban:
-            return
 
+            if not douban and self.config["ptgen"]:
+                douban = self.get_ptgen(entry, detail_page.text)
+            
+        if douban:
+            return self.filter_douban(entry, douban)
+        
+
+    def filter_douban(self, entry, douban):
         if self.config["score"]:
             if not douban.get("douban_rating_average"):
                 logger.warning(
