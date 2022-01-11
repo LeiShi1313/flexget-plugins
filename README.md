@@ -143,7 +143,7 @@ task1:
   rss:
     url: XXXXXXXXXXXXX
     other_field: [link]
- loadbalancer:
+  loadbalancer:
     field: link
     divisor: 3
     accept: [0]
