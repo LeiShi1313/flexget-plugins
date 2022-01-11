@@ -5,6 +5,7 @@ from __future__ import unicode_literals, division, absolute_import
 import re
 import logging
 import hashlib
+from decimal import Decimal
 
 from builtins import *
 
@@ -55,23 +56,38 @@ class LoadBalancer(object):
         config.setdefault("accept", [])
         self.config = config
 
+    @plugin.priority(999)
     def on_task_filter(self, task, config):
         self.prepare_config(config)
 
         for entry in task.accepted + task.undecided:
-            self.consider_accept(task, entry)
+            field = entry.get(self.config["field"])
+            if field:
+                self.process_entry(task, entry)
 
-    def consider_accept(self, task, entry):
+    @plugin.priority(120)
+    def on_task_modify(self, task, config):
+        for entry in task.accepted:
+            field = entry.get(self.config["field"])
+            if field:
+                self.process_entry(task, entry)
+
+    def process_entry(self, task, entry):
         field = entry.get(self.config["field"])
         if not field:
-            raise plugin.PluginError(
+            logger.debug(
                 "Field {} not found in entry, available fields are {}".format(
                     self.config["field"], entry.keys()
                 ))
-
-        num = int(hashlib.md5(bytes(field, 'utf-8')).hexdigest(), 16) % self.config['divisor']
+            return
+        if isinstance(field, int) or isinstance(field, float):
+            num = int(Decimal(field)) % self.config['divisor']
+        else:
+            num = int(hashlib.md5(bytes(field, 'utf-8')).hexdigest(), 16) % self.config['divisor']
         if any(num == n for n in self.config['accept']):
             entry.accept()
+        else:
+            entry.reject()
 
 
 @event("plugin.register")

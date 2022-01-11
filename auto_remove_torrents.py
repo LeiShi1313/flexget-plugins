@@ -16,6 +16,15 @@ from autoremovetorrents.logger import Logger
 
 logger = logging.getLogger("auto_remove_torrents")
 
+def register(name):
+    logger = logging.getLogger(name)
+    logger.handlers = []
+    logger.setLevel(logging.INFO)
+    return logger
+Logger.register = register
+Logger.file_handler = logging.NullHandler()
+Logger.console_handler = logging.NullHandler()
+
 
 class AutoRemoveTorrents(object):
     """
