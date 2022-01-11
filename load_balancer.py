@@ -70,16 +70,18 @@ class LoadBalancer(object):
         for entry in task.accepted:
             field = entry.get(self.config["field"])
             if field:
-                self.process_entry(task, entry)
+                self.process_entry(task, entry, modify=True)
 
-    def process_entry(self, task, entry):
+    def process_entry(self, task, entry, modify=False):
         field = entry.get(self.config["field"])
         if not field:
             logger.debug(
                 "Field {} not found in entry, available fields are {}".format(
                     self.config["field"], entry.keys()
                 ))
-            return
+            if not modify:
+                return
+            field = entry['title']
         if isinstance(field, int) or isinstance(field, float):
             num = int(Decimal(field)) % self.config['divisor']
         else:
